@@ -176,6 +176,22 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- Delete without yanking (black hole register)
+vim.keymap.set({'n', 'v'}, 'd', '"_d', { desc = 'Delete without yanking' })
+vim.keymap.set({'n', 'v'}, 'dd', '"_dd', { desc = 'Delete line without yanking' })
+vim.keymap.set({'n', 'v'}, 'D', '"_D', { desc = 'Delete to end of line without yanking' })
+vim.keymap.set({'n', 'v'}, 'x', '"_x', { desc = 'Delete character without yanking' })
+vim.keymap.set({'n', 'v'}, 'X', '"_X', { desc = 'Delete character backwards without yanking' })
+vim.keymap.set({'n', 'v'}, 's', '"_s', { desc = 'Substitute without yanking' })
+vim.keymap.set({'n', 'v'}, 'S', '"_S', { desc = 'Substitute line without yanking' })
+vim.keymap.set({'n', 'v'}, 'c', '"_c', { desc = 'Change without yanking' })
+vim.keymap.set({'n', 'v'}, 'C', '"_C', { desc = 'Change to end of line without yanking' })
+
+-- If you want to cut (delete and yank), use leader+d
+vim.keymap.set({'n', 'v'}, '<leader>d', 'd', { desc = 'Cut (delete and yank)' })
+vim.keymap.set({'n', 'v'}, '<leader>dd', 'dd', { desc = 'Cut line (delete and yank)' })
+vim.keymap.set({'n', 'v'}, '<leader>D', 'D', { desc = 'Cut to end of line (delete and yank)' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -585,6 +601,7 @@ require('lazy').setup({
             end
           end
 
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -673,7 +690,93 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        -- Modern Python setup with minimal diagnostics
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = 'off',  -- Disable type checking completely
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                autoImportCompletions = true,
+                diagnosticMode = 'openFilesOnly',
+                -- Disable ALL diagnostics except critical import errors
+                diagnosticSeverityOverrides = {
+                  -- Keep only import errors
+                  reportMissingImports = 'error',
+                  reportImportCycles = 'error',
+                  reportUndefinedVariable = 'error',
+                  
+                  -- Disable everything else
+                  reportAssertAlwaysTrue = 'none',
+                  reportCallIssue = 'none',
+                  reportArgumentType = 'none',
+                  reportAttributeAccessIssue = 'none',
+                  reportAssignmentType = 'none',
+                  reportReturnType = 'none',
+                  reportGeneralTypeIssues = 'none',
+                  reportInvalidTypeForm = 'none',
+                  reportInvalidExceptionType = 'none',
+                  reportOptionalSubscript = 'none',
+                  reportOptionalMemberAccess = 'none',
+                  reportOptionalCall = 'none',
+                  reportOptionalIterable = 'none',
+                  reportOptionalContextManager = 'none',
+                  reportOptionalOperand = 'none',
+                  reportTypedDictNotRequiredAccess = 'none',
+                  reportPrivateUsage = 'none',
+                  reportPrivateImportUsage = 'none',
+                  reportConstantRedefinition = 'none',
+                  reportIncompatibleMethodOverride = 'none',
+                  reportIncompatibleVariableOverride = 'none',
+                  reportOverlappingOverload = 'none',
+                  reportMissingParameterType = 'none',
+                  reportMissingTypeArgument = 'none',
+                  reportMissingTypeStubs = 'none',
+                  reportUnknownMemberType = 'none',
+                  reportUnknownArgumentType = 'none',
+                  reportUnknownVariableType = 'none',
+                  reportUnknownParameterType = 'none',
+                  reportUnnecessaryIsInstance = 'none',
+                  reportUnnecessaryCast = 'none',
+                  reportUnnecessaryComparison = 'none',
+                  reportUnnecessaryContains = 'none',
+                  reportAssertTypeFailure = 'none',
+                  reportSelfClsParameterName = 'none',
+                  reportImplicitStringConcatenation = 'none',
+                  reportInvalidStubStatement = 'none',
+                  reportIncompleteStub = 'none',
+                  reportUnsupportedDunderAll = 'none',
+                  reportMatchNotExhaustive = 'none',
+                  reportShadowedImports = 'none',
+                  reportPropertyTypeMismatch = 'none',
+                  reportFunctionMemberAccess = 'none',
+                  reportInvalidTypeVarUse = 'none',
+                  reportCallInDefaultInitializer = 'none',
+                  reportUnusedCallResult = 'none',
+                  reportUnusedExpression = 'none',
+                  reportWildcardImportFromLibrary = 'none',
+                  reportAbstractUsage = 'none',
+                  reportDuplicateImport = 'none',
+                  reportImportCycles = 'none',
+                  reportIncompatibleMethodOverride = 'none',
+                  reportIncompatibleVariableOverride = 'none',
+                  reportMissingSuperCall = 'none',
+                  reportUninitializedInstanceVariable = 'none',
+                  reportInvalidStringEscapeSequence = 'none',
+                  reportUnknownLambdaType = 'none',
+                  reportRedeclaration = 'none',
+                  
+                  -- Make unused items invisible too
+                  reportUnusedImport = 'none',
+                  reportUnusedVariable = 'none',
+                  reportUnusedClass = 'none',
+                  reportUnusedFunction = 'none',
+                },
+              },
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -727,18 +830,6 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
-
-          -- Explicit Pyright config
-          ['pyright'] = function()
-            require('lspconfig').pyright.setup {
-              capabilities = capabilities,
-              settings = {
-                python = {
-                  pythonPath = '/opt/homebrew/bin/python3',
-                },
-              },
-            }
-          end,
         },
       }
     end,
@@ -775,8 +866,8 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        -- Use ruff for Python formatting (imports + formatting)
+        python = { "ruff_format", "ruff_organize_imports" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -982,10 +1073,13 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
+  --require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.ngpt',
+  require 'kickstart.plugins.lazygit',
+
   -- GitHub Copilot plugin for Neovim
   {
     'github/copilot.vim',

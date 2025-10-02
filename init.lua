@@ -934,6 +934,8 @@ require('lazy').setup({
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'default',
+        
+        ['<CR>'] = { 'accept', 'fallback' },
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -1084,6 +1086,91 @@ require('lazy').setup({
   {
     'github/copilot.vim',
     event = 'VimEnter',
+  },
+
+  -- Diffview plugin for Git diff view
+  {
+    'sindrets/diffview.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    cmd = { 'DiffviewOpen', 'DiffviewClose', 'DiffviewToggleFiles', 'DiffviewFocusFiles', 'DiffviewRefresh' },
+    keys = {
+      { '<leader>gd', '<cmd>DiffviewOpen<CR>', desc = '[G]it [D]iff view' },
+      { '<leader>gc', '<cmd>DiffviewClose<CR>', desc = '[G]it diff [C]lose' },
+      { '<leader>gh', '<cmd>DiffviewFileHistory<CR>', desc = '[G]it file [H]istory' },
+      { '<leader>gf', '<cmd>DiffviewToggleFiles<CR>', desc = '[G]it diff toggle [F]iles' },
+    },
+    opts = {
+      diff_binaries = false,
+      enhanced_diff_hl = true,
+      git_cmd = { 'git' },
+      use_icons = vim.g.have_nerd_font,
+      icons = {
+        folder_closed = '',
+        folder_open = '',
+      },
+      signs = {
+        fold_closed = '',
+        fold_open = '',
+        done = '✓',
+      },
+      view = {
+        default = {
+          layout = 'diff2_horizontal',
+          winbar_info = true,
+        },
+        merge_tool = {
+          layout = 'diff3_horizontal',
+          disable_diagnostics = true,
+          winbar_info = true,
+        },
+        file_history = {
+          layout = 'diff2_horizontal',
+          winbar_info = true,
+        },
+      },
+      file_panel = {
+        listing_style = 'tree',
+        tree_options = {
+          flatten_dirs = true,
+          folder_statuses = 'only_folded',
+        },
+        win_config = {
+          position = 'left',
+          width = 35,
+          win_opts = {}
+        },
+      },
+      file_history_panel = {
+        log_options = {
+          git = {
+            single_file = {
+              diff_merges = 'combined',
+            },
+            multi_file = {
+              diff_merges = 'first-parent',
+            },
+          },
+        },
+        win_config = {
+          position = 'bottom',
+          height = 16,
+          win_opts = {}
+        },
+      },
+      commit_log_panel = {
+        win_config = {
+          win_opts = {},
+        }
+      },
+      default_args = {
+        DiffviewOpen = {},
+        DiffviewFileHistory = {},
+      },
+      hooks = {},
+      keymaps = {
+        disable_defaults = false,
+      },
+    },
   },
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 

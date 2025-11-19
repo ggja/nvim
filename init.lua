@@ -177,20 +177,20 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Delete without yanking (black hole register)
-vim.keymap.set({'n', 'v'}, 'd', '"_d', { desc = 'Delete without yanking' })
-vim.keymap.set({'n', 'v'}, 'dd', '"_dd', { desc = 'Delete line without yanking' })
-vim.keymap.set({'n', 'v'}, 'D', '"_D', { desc = 'Delete to end of line without yanking' })
-vim.keymap.set({'n', 'v'}, 'x', '"_x', { desc = 'Delete character without yanking' })
-vim.keymap.set({'n', 'v'}, 'X', '"_X', { desc = 'Delete character backwards without yanking' })
-vim.keymap.set({'n', 'v'}, 's', '"_s', { desc = 'Substitute without yanking' })
-vim.keymap.set({'n', 'v'}, 'S', '"_S', { desc = 'Substitute line without yanking' })
-vim.keymap.set({'n', 'v'}, 'c', '"_c', { desc = 'Change without yanking' })
-vim.keymap.set({'n', 'v'}, 'C', '"_C', { desc = 'Change to end of line without yanking' })
+vim.keymap.set({ 'n', 'v' }, 'd', '"_d', { desc = 'Delete without yanking' })
+vim.keymap.set({ 'n', 'v' }, 'dd', '"_dd', { desc = 'Delete line without yanking' })
+vim.keymap.set({ 'n', 'v' }, 'D', '"_D', { desc = 'Delete to end of line without yanking' })
+vim.keymap.set({ 'n', 'v' }, 'x', '"_x', { desc = 'Delete character without yanking' })
+vim.keymap.set({ 'n', 'v' }, 'X', '"_X', { desc = 'Delete character backwards without yanking' })
+vim.keymap.set({ 'n', 'v' }, 's', '"_s', { desc = 'Substitute without yanking' })
+vim.keymap.set({ 'n', 'v' }, 'S', '"_S', { desc = 'Substitute line without yanking' })
+vim.keymap.set({ 'n', 'v' }, 'c', '"_c', { desc = 'Change without yanking' })
+vim.keymap.set({ 'n', 'v' }, 'C', '"_C', { desc = 'Change to end of line without yanking' })
 
 -- If you want to cut (delete and yank), use leader+d
-vim.keymap.set({'n', 'v'}, '<leader>d', 'd', { desc = 'Cut (delete and yank)' })
-vim.keymap.set({'n', 'v'}, '<leader>dd', 'dd', { desc = 'Cut line (delete and yank)' })
-vim.keymap.set({'n', 'v'}, '<leader>D', 'D', { desc = 'Cut to end of line (delete and yank)' })
+vim.keymap.set({ 'n', 'v' }, '<leader>d', 'd', { desc = 'Cut (delete and yank)' })
+vim.keymap.set({ 'n', 'v' }, '<leader>dd', 'dd', { desc = 'Cut line (delete and yank)' })
+vim.keymap.set({ 'n', 'v' }, '<leader>D', 'D', { desc = 'Cut to end of line (delete and yank)' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -601,7 +601,6 @@ require('lazy').setup({
             end
           end
 
-
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -695,7 +694,7 @@ require('lazy').setup({
           settings = {
             python = {
               analysis = {
-                typeCheckingMode = 'off',  -- Disable type checking completely
+                typeCheckingMode = 'off', -- Disable type checking completely
                 autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
                 autoImportCompletions = true,
@@ -706,7 +705,7 @@ require('lazy').setup({
                   reportMissingImports = 'error',
                   reportImportCycles = 'error',
                   reportUndefinedVariable = 'error',
-                  
+
                   -- Disable everything else
                   reportAssertAlwaysTrue = 'none',
                   reportCallIssue = 'none',
@@ -766,7 +765,7 @@ require('lazy').setup({
                   reportInvalidStringEscapeSequence = 'none',
                   reportUnknownLambdaType = 'none',
                   reportRedeclaration = 'none',
-                  
+
                   -- Make unused items invisible too
                   reportUnusedImport = 'none',
                   reportUnusedVariable = 'none',
@@ -907,6 +906,7 @@ require('lazy').setup({
         python = { "ruff_format", "ruff_organize_imports" },
         -- C# formatting with csharpier
         cs = { "csharpier" },
+        python = { 'ruff_format', 'ruff_organize_imports' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -973,7 +973,7 @@ require('lazy').setup({
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'default',
-        
+
         ['<CR>'] = { 'accept', 'fallback' },
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
@@ -1081,7 +1081,9 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+    config = function(_, opts)
+      require('nvim-treesitter.configs').setup(opts)
+    end,
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = { 'bash', 'c', 'c_sharp', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
@@ -1118,7 +1120,6 @@ require('lazy').setup({
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
-  require 'kickstart.plugins.ngpt',
   require 'kickstart.plugins.lazygit',
 
   -- GitHub Copilot plugin for Neovim
@@ -1179,7 +1180,7 @@ require('lazy').setup({
         win_config = {
           position = 'left',
           width = 35,
-          win_opts = {}
+          win_opts = {},
         },
       },
       file_history_panel = {
@@ -1196,13 +1197,13 @@ require('lazy').setup({
         win_config = {
           position = 'bottom',
           height = 16,
-          win_opts = {}
+          win_opts = {},
         },
       },
       commit_log_panel = {
         win_config = {
           win_opts = {},
-        }
+        },
       },
       default_args = {
         DiffviewOpen = {},

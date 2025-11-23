@@ -801,6 +801,12 @@ require('lazy').setup({
             },
           },
         },
+        zls = {
+          -- ZLS (Zig Language Server) configuration
+          -- If you want to use a custom ZLS binary, uncomment the cmd line below:
+          -- cmd = { "/path/to/zls" },
+          settings = {},
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -1045,7 +1051,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'zig' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {

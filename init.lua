@@ -177,9 +177,6 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Delete without yanking (black hole register)
-vim.keymap.set({ 'n', 'v' }, 'd', '"_d', { desc = 'Delete without yanking' })
-vim.keymap.set({ 'n', 'v' }, 'dd', '"_dd', { desc = 'Delete line without yanking' })
-vim.keymap.set({ 'n', 'v' }, 'D', '"_D', { desc = 'Delete to end of line without yanking' })
 vim.keymap.set({ 'n', 'v' }, 'x', '"_x', { desc = 'Delete character without yanking' })
 vim.keymap.set({ 'n', 'v' }, 'X', '"_X', { desc = 'Delete character backwards without yanking' })
 vim.keymap.set({ 'n', 'v' }, 's', '"_s', { desc = 'Substitute without yanking' })
@@ -187,10 +184,6 @@ vim.keymap.set({ 'n', 'v' }, 'S', '"_S', { desc = 'Substitute line without yanki
 vim.keymap.set({ 'n', 'v' }, 'c', '"_c', { desc = 'Change without yanking' })
 vim.keymap.set({ 'n', 'v' }, 'C', '"_C', { desc = 'Change to end of line without yanking' })
 
--- If you want to cut (delete and yank), use leader+d
-vim.keymap.set({ 'n', 'v' }, '<leader>d', 'd', { desc = 'Cut (delete and yank)' })
-vim.keymap.set({ 'n', 'v' }, '<leader>dd', 'dd', { desc = 'Cut line (delete and yank)' })
-vim.keymap.set({ 'n', 'v' }, '<leader>D', 'D', { desc = 'Cut to end of line (delete and yank)' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -812,7 +805,7 @@ require('lazy').setup({
             },
           },
         },
-        
+        gopls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -861,6 +854,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'goimports',
+        'gofumpt',
+        'golangci-lint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       require('mason-lspconfig').setup {
@@ -908,6 +904,8 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        -- Conform can also run multiple formatters sequentially
+        go = { 'goimports', 'gofumpt' },
         -- Use ruff for Python formatting (imports + formatting)
         python = { "ruff_format", "ruff_organize_imports" },
         -- C# formatting with csharpier
@@ -1092,7 +1090,7 @@ require('lazy').setup({
     end,
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c',  'csharp', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'zig' },
+      ensure_installed = { 'bash', 'c',  'csharp', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'zig', 'go', 'gomod' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
